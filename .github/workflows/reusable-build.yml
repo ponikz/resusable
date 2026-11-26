@@ -40,14 +40,6 @@ jobs:
           echo "Building backend"
           sleep 50
 
-  call-tests:
-    needs:
-      - build-frontend
-      - build-backend
-    uses: ./.github/workflows/reusable-tests.yml
-    with:
-      fail_tests: ${{ inputs.fail_tests }}
-
   package:
     needs: call-tests
     runs-on: ubuntu-latest
