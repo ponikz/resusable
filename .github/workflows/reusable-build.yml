@@ -1,0 +1,58 @@
+name: Reusable Build
+
+on:
+  workflow_call:
+    inputs:
+      fail_tests:
+        type: boolean
+        default: false
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        run: |
+          echo "Setting up build environment"
+          sleep 10
+
+  build-frontend:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: sleep 10
+
+      - name: Build frontend
+        run: |
+          echo "Building frontend"
+          sleep 30
+
+  build-backend:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: sleep 10
+
+      - name: Build backend
+        run: |
+          echo "Building backend"
+          sleep 50
+
+  call-tests:
+    needs:
+      - build-frontend
+      - build-backend
+    uses: ./.github/workflows/reusable-tests.yml
+    with:
+      fail_tests: ${{ inputs.fail_tests }}
+
+  package:
+    needs: call-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Package application
+        run: |
+          echo "Packaging application"
+          sleep 15
