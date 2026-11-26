@@ -1,0 +1,33 @@
+name: Reusable Workflow UI Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      fail_tests:
+        description: "Simulate integration test failure"
+        type: boolean
+        default: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare environment
+        run: |
+          echo "Preparing environment"
+          sleep 10
+
+  call-build:
+    needs: prepare
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      fail_tests: ${{ inputs.fail_tests }}
+
+  finish:
+    needs: call-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Finish workflow
+        run: |
+          echo "Workflow completed"
+          sleep 10
